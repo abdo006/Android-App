@@ -1,0 +1,128 @@
+
+                                           الاسم:عبدالرحمن صبحى احمد محمد 
+                                                    IS
+
+
+
+ 
+
+
+
+
+
+This is a simple android app UI code to add numbers using the MVP architecture design pattern.
+
+
+
+
+import android.os.Bundle
+import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+
+
+class MainActivity : AppCompatActivity(), MainContract.View {
+
+    private lateinit var presenter: MainContract.Presenter
+
+    private lateinit var etNumber1: EditText
+    private lateinit var etNumber2: EditText
+    private lateinit var btnAdd: Button
+    private lateinit var tvResult: TextView
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        ///// Initialize presenter
+        presenter = MainPresenter(this)
+
+        
+        etNumber1 = findViewById(R.id.etNumber1)
+        etNumber2 = findViewById(R.id.etNumber2)
+        btnAdd = findViewById(R.id.btnAdd)
+        tvResult = findViewById(R.id.tvResult)
+
+        /////// Set click listener for the Add button
+        btnAdd.setOnClickListener {
+            val number1 = etNumber1.text.toString().toInt()
+            val number2 = etNumber2.text.toString().toInt()
+            presenter.onAddButtonClicked(number1, number2)
+        }
+    }
+
+    override fun showResult(result: Int) {
+        tvResult.text = "Result: $result"
+    }
+}
+
+
+
+To create interface 
+
+
+interface MainContract {
+    interface View {
+        fun showResult(result: Int)
+    }
+
+    interface Presenter {
+        fun onAddButtonClicked(number1: Int, number2: Int)
+    }
+}
+
+
+
+To create class 
+
+class MainPresenter(private val view: MainContract.View) : MainContract.Presenter {
+    override fun onAddButtonClicked(number1: Int, number2: Int) {
+        val sum = number1 + number2
+        view.showResult(sum)
+    }
+}
+
+
+
+
+This is XML layout to define URL
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/etNumber1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Number 1" />
+
+    <EditText
+        android:id="@+id/etNumber2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Number 2" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add" />
+
+    <TextView
+        android:id="@+id/tvResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
+
+
